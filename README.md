@@ -1,2 +1,0 @@
-# PetcareIQ
-Kennel Software 
