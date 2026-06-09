@@ -659,12 +659,12 @@
     <div class="sidebar-section-label">Care &amp; Media</div>
     <div class="nav-item" onclick="navigate('dogs')"><span class="nav-icon">🐕</span> Dogs</div>
     <div class="nav-item" onclick="navigate('cats')"><span class="nav-icon">🐈</span> Cats</div>
-    <div class="nav-item" onclick="navigate('updates')"><span class="nav-icon">📝</span> Today at the Kennel <span class="nav-badge">2</span></div>
+    <div class="nav-item" onclick="navigate('updates')"><span class="nav-icon">📝</span> Today at the Kennel <span class="nav-badge" id="nav-badge-updates" style="display:none">0</span></div>
     <div class="sidebar-section-label">Business</div>
     <div class="nav-item role-owner-only" onclick="navigate('owners')"><span class="nav-icon">👥</span> Pet Owners</div>
     <div class="nav-item role-owner-only" onclick="navigate('billing')"><span class="nav-icon">💷</span> Billing</div>
     <div class="nav-item role-owner-only" onclick="navigate('timesheets')"><span class="nav-icon">⏱️</span> Timesheets</div>
-    <div class="nav-item" onclick="navigate('notifications')"><span class="nav-icon">🔔</span> Alerts <span class="nav-badge">6</span></div>
+    <div class="nav-item" onclick="navigate('notifications')"><span class="nav-icon">🔔</span> Alerts <span class="nav-badge" id="nav-badge-alerts" style="display:none">0</span></div>
     <div class="nav-item role-owner-only" onclick="navigate('settings')"><span class="nav-icon">⚙️</span> Settings</div>
     <div class="sidebar-section-label">Portal Demo</div>
     <div class="nav-item" onclick="navigate('owner-portal')"><span class="nav-icon">📱</span> Owner Portal</div>
@@ -2292,216 +2292,7 @@ function savePrivacyNotice() {
 // flag. After Yjs hydration completes, the observer mirrors the tenant's
 // persisted snapshot back into DATA — overriding whatever was set here.
 //
-const DEMO_SEED = {
-  kennels: [
-    { id:'K01', bookingEnabled:true, name:'Olive Grove', dog:'Milo', owner:'Jennifer Clarke', breed:'Cockapoo', checkin:'17 Jun', checkout:'22 Jun', status:'occupied', temp:21, lastClean:'07:15', feeding:'Complete', walk:'Complete', medFlag:false },
-    { id:'K02', bookingEnabled:true, name:'Cypress Shade', dog:'Bella', owner:'Sarah Thompson', breed:'Labrador', checkin:'15 Jun', checkout:'20 Jun', status:'occupied', temp:20, lastClean:'07:30', feeding:'Complete', walk:'Complete', medFlag:false },
-    { id:'K03', bookingEnabled:true, name:'Sunset Run', dog:'Teddy', owner:'Michael Brown', breed:'Cavapoo', checkin:'18 Jun', checkout:'24 Jun', status:'occupied', temp:22, lastClean:'07:00', feeding:'Pending', walk:'Complete', medFlag:false },
-    { id:'K04', bookingEnabled:true, name:'Carob Court', dog:'Luna', owner:'Claire Hughes', breed:'Rescue Mix', checkin:'16 Jun', checkout:'25 Jun', status:'occupied', temp:20, lastClean:'07:45', feeding:'Complete', walk:'Pending', medFlag:true, special:'ANXIOUS' },
-    { id:'K05', bookingEnabled:true, name:'Stone Terrace', dog:'Archie', owner:'James Mitchell', breed:'Golden Retriever', checkin:'19 Jun', checkout:'23 Jun', status:'occupied', temp:21, lastClean:'08:00', feeding:'Complete', walk:'Complete', medFlag:false },
-    { id:'K06', bookingEnabled:true, name:'Fig Garden', dog:'Nala', owner:'Patricia Evans', breed:'Vizsla', checkin:'20 Jun', checkout:'27 Jun', status:'occupied', temp:21, lastClean:'08:15', feeding:'Pending', walk:'Complete', medFlag:true },
-    { id:'K07', bookingEnabled:true, name:'Lavender Walk', dog:'Olive', owner:'Dr Stavros Kyriakou', breed:'Spaniel', checkin:'19 Jun', checkout:'22 Jun', status:'occupied', temp:21, lastClean:'07:30', feeding:'Complete', walk:'Pending', medFlag:false },
-    { id:'K08', bookingEnabled:true, name:'Hillview Lodge', dog:'Max', owner:'Robert Davidson', breed:'German Shepherd', checkin:'18 Jun', checkout:'21 Jun', status:'occupied', temp:20, lastClean:'07:00', feeding:'Complete', walk:'Complete', medFlag:true, special:'MEDICATION' },
-    { id:'K09', bookingEnabled:true, name:'Quiet Pines', dog:null, owner:null, breed:null, checkin:null, checkout:null, status:'available', temp:null, lastClean:'Yesterday', feeding:'N/A', walk:'N/A', medFlag:false },
-    { id:'K10', bookingEnabled:true, name:'Meadow End', dog:null, owner:'Charlotte Davies', breed:null, checkin:'21 Jun', checkout:null, status:'reserved', temp:null, lastClean:'Yesterday', feeding:'N/A', walk:'N/A', medFlag:false },
-    { id:'K11', bookingEnabled:true, name:'Overflow',  dog:null, owner:null, breed:null, checkin:null, checkout:null, status:'available', temp:null, lastClean:'Today', feeding:'N/A', walk:'N/A', medFlag:false },
-    { id:'K12', bookingEnabled:true, name:'Isolation', dog:null, owner:null, breed:null, checkin:null, checkout:null, status:'available', temp:null, lastClean:'Today', feeding:'N/A', walk:'N/A', medFlag:false },
-  ],
-
-  dogs: [
-    { id:'d1', name:'Milo', emoji:'🐩', breed:'Cockapoo', age:'3 yrs', sex:'M', weight:'8 kg', owner:'Jennifer Clarke', postcode:'GL52 3JE', kennel:'K01', status:'boarding', temperament:'Playful, affectionate', diet:'Royal Canin Medium Junior', allergies:'None', meds:'None', vet:'Dr Sarah Whitmore, Cheltenham', behaviourNotes:'Loves cuddles, excellent with children and other small dogs.', special:false, vaccStatus:'up-to-date', vaccExpiry:'Mar 2026', wellbeing:100, wf:{ appetite:2, toileting:2, health:2 },
-      belongings:['Lead','Harness','Bed','Blanket','Food Tub','Treats'], wfHistory:[
-        { date:'15 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'16 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'17 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'18 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'19 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'20 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-      ]},
-    { id:'d2', name:'Bella', emoji:'🦮', breed:'Labrador', age:'5 yrs', sex:'F', weight:'28 kg', owner:'Sarah Thompson', postcode:'GL54 5LB', kennel:'K02', status:'boarding', temperament:'Calm, gentle giant', diet:'Hydrolysed protein (chicken allergy)', allergies:'Chicken', meds:'None', vet:'Cotswold Vets Cheltenham', behaviourNotes:'Extremely food motivated. No chicken in any form.', special:true, specialNote:'⚠️ Chicken allergy — hydrolysed protein diet only', vaccStatus:'up-to-date', vaccExpiry:'Sep 2025', wellbeing:100, wf:{ appetite:2, toileting:2, health:2 },
-      belongings:['Lead','Bed','Food Tub','Medication Bag'], wfHistory:[
-        { date:'15 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'16 Mar', wf:{appetite:1,toileting:2,health:2}, notes:{appetite:'Ate slowly, possibly warm'} },
-        { date:'17 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'18 Mar', wf:{appetite:2,toileting:1,health:2}, notes:{toileting:'Loose stool AM, resolved PM'} },
-        { date:'19 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'20 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-      ]},
-    { id:'d3', name:'Teddy', emoji:'🐕', breed:'Cavapoo', age:'2 yrs', sex:'M', weight:'7 kg', owner:'Michael Brown', postcode:'GL50 3NW', kennel:'K03', status:'boarding', temperament:'Energetic, curious', diet:'Raw complete, 200g twice daily', allergies:'None', meds:'None', vet:'Cheltenham Animal Hospital', behaviourNotes:'Very playful. Compatible with Milo and Poppy.', special:false, vaccStatus:'up-to-date', vaccExpiry:'Jan 2026', wellbeing:100, wf:{ appetite:2, toileting:2, health:2 },
-      belongings:['Lead','Harness','Bed','Toys','Food Tub'], wfHistory:[
-        { date:'15 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'16 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'17 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'18 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'19 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'20 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-      ]},
-    { id:'d4', name:'Luna', emoji:'🐕‍🦺', breed:'Rescue Mix', age:'4 yrs', sex:'F', weight:'14 kg', owner:'Claire Hughes', postcode:'WR12 7JR', kennel:'K04', status:'boarding', temperament:'Anxious, cautious', diet:'Science Diet Sensitive Stomach', allergies:'Loud noises', meds:'Ear drops 18:00', vet:'Winchcombe Veterinary Surgery', behaviourNotes:'Rescue background. Needs quiet handling, low strangers. Responds to calm voice. Do NOT corner.', special:true, specialNote:'😰 Anxious rescue — quiet kennel, familiar staff only', vaccStatus:'due-soon', vaccExpiry:'Jul 2025', wellbeing:67, wf:{ appetite:1, toileting:1, health:2 },
-      belongings:['Lead','Blanket','Bed','Food Tub','Medication Bag'], wfHistory:[
-        { date:'15 Mar', wf:{appetite:1,toileting:2,health:2}, notes:{appetite:'Skipped morning feed'} },
-        { date:'16 Mar', wf:{appetite:0,toileting:1,health:2}, notes:{appetite:'Refused both meals — anxious after new dog arrived',toileting:'Infrequent'} },
-        { date:'17 Mar', wf:{appetite:1,toileting:1,health:2}, notes:{appetite:'Ate half ration PM'} },
-        { date:'18 Mar', wf:{appetite:1,toileting:2,health:2}, notes:{} },
-        { date:'19 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'20 Mar', wf:{appetite:1,toileting:2,health:2}, notes:{appetite:'Slow to eat AM, fine PM'} },
-      ]},
-    { id:'d5', name:'Archie', emoji:'🦁', breed:'Golden Retriever', age:'6 yrs', sex:'M', weight:'34 kg', owner:'James Mitchell', postcode:'GL56 0LH', kennel:'K05', status:'boarding', temperament:'Laid-back, sociable', diet:'Hills Science Large Breed Senior', allergies:'None', meds:'None', vet:'Winchcombe Vets', behaviourNotes:'Loves long walks. Great with all dogs. Easy guest.', special:false, vaccStatus:'up-to-date', vaccExpiry:'Dec 2025', wellbeing:100, wf:{ appetite:2, toileting:2, health:2 },
-      belongings:['Lead','Harness','Bed','Blanket','Treats'], wfHistory:[
-        { date:'15 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'16 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'17 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'18 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'19 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'20 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-      ]},
-    { id:'d6', name:'Nala', emoji:'🐕', breed:'Vizsla', age:'3 yrs', sex:'F', weight:'22 kg', owner:'Patricia Evans', postcode:'GL54 1AA', kennel:'K06', status:'boarding', temperament:'Active, sensitive', diet:'High protein raw + supplement', allergies:'None', meds:'Calming supplement 12:00', vet:'Dr James Fletcher', behaviourNotes:'Needs at least 2 walks daily. Very sensitive to changes in routine.', special:false, vaccStatus:'up-to-date', vaccExpiry:'Feb 2026', wellbeing:100, wf:{ appetite:2, toileting:2, health:2 },
-      belongings:['Lead','Harness','Food Tub','Supplement Bag'], wfHistory:[
-        { date:'15 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'16 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'17 Mar', wf:{appetite:2,toileting:2,health:1}, notes:{health:'Slight limping RH leg post-walk — resolved'} },
-        { date:'18 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'19 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'20 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-      ]},
-    { id:'d7', name:'Olive', emoji:'🐕', breed:'Spaniel', age:'4 yrs', sex:'F', weight:'16 kg', owner:'Dr Stavros Kyriakou', postcode:'GL50 1YZ', kennel:'K07', status:'boarding', temperament:'Gentle, obedient', diet:'Acana Singles Duck + Pear', allergies:'None', meds:'None', vet:'Moreton-in-Marsh Vets', behaviourNotes:'Well trained, very obedient. Loves water.', special:false, vaccStatus:'up-to-date', vaccExpiry:'Nov 2025', wellbeing:100, wf:{ appetite:2, toileting:2, health:2 },
-      belongings:['Lead','Bed','Blanket','Toys'], wfHistory:[
-        { date:'15 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'16 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'17 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'18 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'19 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'20 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-      ]},
-    { id:'d8', name:'Max', emoji:'🐺', breed:'German Shepherd', age:'7 yrs', sex:'M', weight:'40 kg', owner:'Robert Davidson', postcode:'GL54 2BU', kennel:'K08', status:'boarding', temperament:'Protective, intelligent', diet:'Eukanuba Large Breed Mature', allergies:'None', meds:'Meloxicam 10:00 (anti-inflammatory)', vet:'Cotswold Vets Bourton', behaviourNotes:'Well trained ex-working dog. Very loyal to Robert. Takes medication well.', special:true, specialNote:'⚕️ Daily anti-inflammatory medication required at 10:00', vaccStatus:'overdue', vaccExpiry:'Apr 2025', wellbeing:83, wf:{ appetite:2, toileting:2, health:1 },
-      belongings:['Lead','Bed','Medication Bag','Food Tub'], wfHistory:[
-        { date:'15 Mar', wf:{appetite:2,toileting:2,health:1}, notes:{health:'Stiff on rising, meloxicam given'} },
-        { date:'16 Mar', wf:{appetite:2,toileting:2,health:1}, notes:{health:'Mild stiffness AM, improved by afternoon'} },
-        { date:'17 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'18 Mar', wf:{appetite:1,toileting:2,health:1}, notes:{appetite:'Ate slowly',health:'Favouring LH leg slightly'} },
-        { date:'19 Mar', wf:{appetite:2,toileting:2,health:2}, notes:{} },
-        { date:'20 Mar', wf:{appetite:2,toileting:2,health:1}, notes:{health:'Hip stiffness noted — monitor'} },
-      ]},
-    { id:'d9', name:'Poppy', emoji:'🐩', breed:'Miniature Schnauzer', age:'2 yrs', sex:'F', weight:'6 kg', owner:'Amanda Foster', postcode:'GL53 8LT', kennel:null, status:'boarding', temperament:'Cheeky, playful', diet:'Royal Canin Mini Adult', allergies:'None', meds:'None', vet:'Cotswold Vets Cheltenham', behaviourNotes:'Regular guest. Compatible with Milo and Teddy.', special:false, vaccStatus:'up-to-date', vaccExpiry:'Oct 2025', wellbeing:100, wf:{ appetite:2, toileting:2, health:2 }, belongings:['Lead','Harness'], wfHistory:[] },
-    { id:'d10', name:'Winston', emoji:'🐷', breed:'French Bulldog', age:'3 yrs', sex:'M', weight:'12 kg', owner:'Tom Richardson', postcode:'GL51 3QZ', kennel:null, status:'arriving', temperament:'Stubborn, loveable', diet:'Royal Canin Bulldog', allergies:'None', meds:'None', vet:'Cheltenham Animal Hospital', behaviourNotes:'Brachycephalic — short walks only, monitor heat closely.', special:true, specialNote:'☁️ Brachycephalic breed — no strenuous exercise', vaccStatus:'up-to-date', vaccExpiry:'Aug 2025', wellbeing:null, wf:null, belongings:['Lead','Coat','Food Tub'], wfHistory:[] },
-    { id:'d11', name:'Coco', emoji:'🐶', breed:'Toy Poodle', age:'5 yrs', sex:'F', weight:'4 kg', owner:'Helen Barnes', postcode:'GL54 3EW', kennel:null, status:'boarding', temperament:'Elegant, clever', diet:'Grain-free small breed', allergies:'None', meds:'None', vet:'Cotswold Vets Cheltenham', behaviourNotes:'Very gentle. Prefers calm smaller dogs.', special:false, vaccStatus:'up-to-date', vaccExpiry:'Jun 2026', wellbeing:100, wf:{ appetite:2, toileting:2, health:2 }, belongings:['Lead','Bed','Blanket'], wfHistory:[] },
-    { id:'d12', name:'Bruno', emoji:'🐻', breed:'Rottweiler', age:'4 yrs', sex:'M', weight:'48 kg', owner:'Andreas Christou', postcode:'GL1 5AY', kennel:null, status:'upcoming', temperament:'Calm, protective', diet:'Specific CRD-1 Large', allergies:'None', meds:'None', vet:'Dr Anna Hughes, Gloucester', behaviourNotes:'Excellent temperament. Certified obedience training. Requires large run.', special:false, wellbeing:null, wf:null, belongings:[], wfHistory:[] },
-  ],
-
-  owners: [
-    { id:'jennifer', name:'Jennifer Clarke',      email:'j.clarke@email.com',            phone:'+44 7700 100 111', dogs:['Milo'],   area:'Cheltenham',    memberSince:'Jan 2024', notes:'Likes daily photo updates. Pays promptly.',                                    emergencyContacts:[{ name:'David Clarke',     relation:'Husband',       phone:'+44 7700 100 222' }] },
-    { id:'sarah',    name:'Sarah Thompson',        email:'sthompson@email.co.uk',           phone:'+44 7700 300 333', dogs:['Bella'],  area:'Winchcombe', memberSince:'Mar 2024', notes:'Chicken allergy critical. Emergency contact in UK.',                           emergencyContacts:[{ name:'Margaret Thompson', relation:'Mother (UK)',    phone:'+44 7711 234567' }] },
-    { id:'robert',   name:'Robert Davidson',       email:'r.davidson@uk.com',             phone:'+44 7900 123456', dogs:['Max'],    area:'Bourton-on-the-Water',   memberSince:'Nov 2023', notes:'Medication adherence is priority. Ex-military handler.',                       emergencyContacts:[{ name:'Susan Davidson',    relation:'Wife',          phone:'+44 7900 654321' }, { name:'Winchcombe Vets', relation:'Vet (Max)',    phone:'+44 1242 100 200' }] },
-    { id:'emily',    name:'Claire Hughes',         email:'claire.h@icloud.com',           phone:'+44 7700 500 555', dogs:['Luna'],   area:'Broadway',        memberSince:'Feb 2024', notes:'Anxious about leaving Luna. Very grateful for detailed updates.',               emergencyContacts:[{ name:'Tom Hughes',        relation:'Partner',       phone:'+44 7700 500 666' }] },
-    { id:'james',    name:'James Mitchell',        email:'james.mitchell@email.co.uk',     phone:'+44 7700 700 777', dogs:['Archie'], area:'Moreton-in-Marsh',  memberSince:'Sep 2023', notes:'Prefers video updates. Regular long-term client.',                             emergencyContacts:[{ name:'Helen Mitchell',    relation:'Wife',          phone:'+44 7700 700 888' }, { name:'Cotswold Vets Cheltenham', relation:'Vet (Archie)', phone:'+44 1386 200 300' }] },
-    { id:'patricia', name:'Patricia Evans',        email:'patricia.evans@hotmail.com',    phone:'+44 7700 900 100', dogs:['Nala'],   area:'Stow-on-the-Wold',        memberSince:'Apr 2024', notes:'Nala needs 2+ walks. Patricia very active herself.',                           emergencyContacts:[{ name:'Brian Evans',       relation:'Brother',       phone:'+44 7700 900 200' }] },
-    { id:'stavros',  name:'Dr Stavros Kyriakou',   email:'s.kyriakou@uclan.ac.uk',        phone:'+44 7700 200 300', dogs:['Olive'],  area:'Cheltenham Town', memberSince:'Jun 2023', notes:'Professor — prefers academic communication style.',                             emergencyContacts:[{ name:'Maria Kyriakou',    relation:'Wife',          phone:'+44 7700 200 400' }] },
-  ],
-
-  cats: [
-    { id:'c1', name:'Luna',    emoji:'🐈', breed:'British Shorthair', age:'4 yrs', sex:'F', owner:'jennifer', ownerName:'Jennifer Clarke', suiteId:'CS01', notes:'Very calm, loves being brushed.', warnings:[], belongings:['Bed','Toy','Food tub'], litterNotes:'Clumping clay litter · cleaned twice daily · prefers covered tray', feedingNotes:'Royal Canin Mature 50g twice daily · no treats · fresh water always', temperamentNotes:'Very gentle and calm · loves being brushed · comfortable with other cats · easy to handle' },
-    { id:'c2', name:'Oscar',   emoji:'🐱', breed:'Maine Coon',        age:'6 yrs', sex:'M', owner:'sarah',    ownerName:'Sarah Thompson',  suiteId:'CS02', notes:'Needs quiet environment — anxious around loud noise.', warnings:['Nervous with strangers'], belongings:['Bed','Blanket'], litterNotes:'Silica gel litter · one large uncovered tray · very clean — change daily', feedingNotes:'Hills Science Diet 70g morning and evening · no wet food · leave water in ceramic bowl', temperamentNotes:'Shy on arrival — needs time to settle · do not force interaction · prefers quiet solo suite · stress-prone' },
-    { id:'c3', name:'Bella',   emoji:'🐈‍⬛',breed:'Domestic Shorthair',age:'2 yrs', sex:'F', owner:'emily',   ownerName:'Claire Hughes',   suiteId:'CS03', notes:'Playful and energetic.', warnings:[], belongings:['Toy','Treats'], litterNotes:'Any clumping litter · two trays preferred · very hygienic — self-cleans regularly', feedingNotes:'Whiskas wet pouch AM · dry biscuits available all day · loves treats', temperamentNotes:'Highly playful and energetic · loves interactive toys · good with other cats · easy to handle · will ask for attention' },
-    { id:'c4', name:'Simba',   emoji:'🦁', breed:'Ragdoll',           age:'5 yrs', sex:'M', owner:'stavros', ownerName:'Dr Stavros Kyriakou', suiteId:'CS04', notes:'Very affectionate, follows staff around.', warnings:[], belongings:['Bed','Blanket','Favourite toy'], litterNotes:'Fine-grain litter · covered tray · clean twice daily · very particular', feedingNotes:'Raw diet 100g morning only · Simba will not eat dry food · bring own food supply', temperamentNotes:'Extremely affectionate · will follow staff · floppy and relaxed when handled · indoor only · excellent temperament' },
-    { id:'c5', name:'Cleo',    emoji:'🐈', breed:'Siamese',           age:'3 yrs', sex:'F', owner:'patricia',ownerName:'Patricia Evans',  suiteId:'CS05', notes:'Vocal — will meow at feeding time.', warnings:['Medication caution'], belongings:['Food tub','Medication bag'], litterNotes:'Unscented clumping litter · one covered tray · clean morning and evening', feedingNotes:'Prescription gastrointestinal food 60g twice daily · Methimazole tablet hidden in food at 08:00 · no extras', temperamentNotes:'Very vocal especially at meal times · confident and curious · comfortable with handling · indoor only' },
-  ],
-
-  cattery: [
-    { id:'CS01', name:'Willow Suite',  catId:'c1', catName:'Luna',  ownerName:'Jennifer Clarke', breed:'British Shorthair', checkin:'18 Jun', checkout:'23 Jun', status:'occupied',  lastClean:'07:30', feeding:'Complete' },
-    { id:'CS02', name:'Fern Suite',    catId:'c2', catName:'Oscar', ownerName:'Sarah Thompson',  breed:'Maine Coon',        checkin:'17 Jun', checkout:'22 Jun', status:'occupied',  lastClean:'07:45', feeding:'Complete' },
-    { id:'CS03', name:'Cedar Suite',   catId:'c3', catName:'Bella', ownerName:'Claire Hughes',   breed:'Domestic Shorthair',checkin:'20 Jun', checkout:'26 Jun', status:'occupied',  lastClean:'08:00', feeding:'Pending'  },
-    { id:'CS04', name:'Birch Suite',   catId:'c4', catName:'Simba', ownerName:'Dr Stavros Kyriakou', breed:'Ragdoll',     checkin:'19 Jun', checkout:'24 Jun', status:'occupied',  lastClean:'07:15', feeding:'Complete' },
-    { id:'CS05', name:'Maple Suite',   catId:'c5', catName:'Cleo',  ownerName:'Patricia Evans',  breed:'Siamese',           checkin:'20 Jun', checkout:'27 Jun', status:'occupied',  lastClean:'08:10', feeding:'Complete' },
-    { id:'CS06', name:'Ash Suite',     catId:null, catName:null,    ownerName:null,              breed:null,                checkin:null,     checkout:null,     status:'available', lastClean:'Yesterday', feeding:'N/A'  },
-    { id:'CS07', name:'Oak Suite',     catId:null, catName:null,    ownerName:null,              breed:null,                checkin:null,     checkout:null,     status:'available', lastClean:'Yesterday', feeding:'N/A'  },
-    { id:'CS08', name:'Pine Suite',    catId:null, catName:null,    ownerName:null,              breed:null,                checkin:null,     checkout:null,     status:'available', lastClean:'Today',     feeding:'N/A'  },
-    { id:'CS09', name:'Ivy Suite',     catId:null, catName:null,    ownerName:null,              breed:null,                checkin:null,     checkout:null,     status:'available', lastClean:'Today',     feeding:'N/A'  },
-    { id:'CS10', name:'Sage Suite',    catId:null, catName:null,    ownerName:null,              breed:null,                checkin:'22 Jun', checkout:null,     status:'reserved',  lastClean:'Yesterday', feeding:'N/A'  },
-  ],
-
-  bookings: [
-    { id:'BK001', invoiceId:'INV-0089', dog:'Milo', owner:'Jennifer Clarke', kennel:'K01', type:'Boarding', checkin:'17 Jun', checkout:'22 Jun', status:'active', paid:true, total:'£420' },
-    { id:'BK002', invoiceId:'INV-0090', dog:'Bella', owner:'Sarah Thompson', kennel:'K02', type:'Boarding', checkin:'15 Jun', checkout:'20 Jun', status:'departing', paid:true, total:'£500', transport:'dropoff' },
-    { id:'BK003', invoiceId:'INV-0091', dog:'Teddy', owner:'Michael Brown', kennel:'K03', type:'Boarding', checkin:'18 Jun', checkout:'24 Jun', status:'active', paid:false, total:'£530' },
-    { id:'BK004', invoiceId:'INV-0090', dog:'Luna', owner:'Claire Hughes', kennel:'K04', type:'Boarding', checkin:'16 Jun', checkout:'25 Jun', status:'active', paid:true, total:'£695', transport:'pickup' },
-    { id:'BK005', invoiceId:'INV-0093', dog:'Archie', owner:'James Mitchell', kennel:'K05', type:'Boarding', checkin:'19 Jun', checkout:'23 Jun', status:'active', paid:true, total:'£360' },
-    { id:'BK006', invoiceId:'INV-0092', dog:'Nala', owner:'Patricia Evans', kennel:'K06', type:'Boarding', checkin:'20 Jun', checkout:'27 Jun', status:'active', paid:false, total:'£695', transport:'both' },
-    { id:'BK007', invoiceId:'INV-0095', dog:'Olive', owner:'Dr Stavros Kyriakou', kennel:'K07', type:'Boarding', checkin:'19 Jun', checkout:'22 Jun', status:'active', paid:true, total:'£220' },
-    { id:'BK008', invoiceId:'INV-0094', dog:'Max', owner:'Robert Davidson', kennel:'K08', type:'Boarding', checkin:'18 Jun', checkout:'21 Jun', status:'active', paid:true, total:'£280', transport:'both' },
-    { id:'BK009', invoiceId:'INV-0096', dog:'Poppy', owner:'Amanda Foster', kennel:null, type:'Boarding', checkin:'20 Jun', checkout:'20 Jun', status:'active', paid:true, total:'£45', transport:'pickup' },
-    { id:'BK010', invoiceId:'INV-0098', dog:'Winston', owner:'Tom Richardson', kennel:'K09', type:'Boarding', checkin:'20 Jun', checkout:'25 Jun', status:'arriving', paid:false, total:'£395', transport:'both' },
-    { id:'BK011', invoiceId:'INV-0097', dog:'Coco', owner:'Helen Barnes', kennel:null, type:'Boarding', checkin:'20 Jun', checkout:'20 Jun', status:'active', paid:true, total:'£40' },
-    { id:'BK012', invoiceId:null, dog:'Bruno', owner:'Andreas Christou', kennel:'K10', type:'Boarding', checkin:'21 Jun', checkout:'28 Jun', status:'upcoming', paid:false, total:'£630' },
-    { id:'BK013', invoiceId:null, dog:'Milo', owner:'Jennifer Clarke', kennel:'K01', type:'Boarding', checkin:'10 Jul', checkout:'16 Jul 2025', status:'upcoming', paid:false, total:'£390', notes:'Summer holiday stay' },
-    { id:'BK014', invoiceId:null, dog:'Bella', owner:'Sarah Thompson', kennel:'K02', type:'Boarding', checkin:'02 Sep', checkout:'09 Sep 2025', status:'upcoming', paid:false, total:'£455', notes:'Long weekend break' },
-    { id:'BK015', invoiceId:null, dog:'Archie', owner:'James Mitchell', kennel:'K05', type:'Boarding', checkin:'14 Nov', checkout:'21 Nov 2025', status:'upcoming', paid:false, total:'£455', notes:'Anniversary trip' },
-    { id:'BK016', invoiceId:null, dog:'Teddy', owner:'Michael Brown', kennel:null, type:'Boarding', checkin:'28 Dec', checkout:'28 Dec 2025', status:'upcoming', paid:false, total:'£45', notes:'Christmas period visit' },
-  ],
-
-  notifications: [
-    { id:1, type:'amber', icon:'⚕️', title:'Medication Due — Max', desc:'Meloxicam anti-inflammatory due at 10:00. Please confirm administration.', time:'09:15', unread:true, action:'dogs' },
-    { id:2, type:'amber', icon:'📝', title:'Daily Update Due', desc:'Luna\'s owner Claire Hughes is expecting an update by 18:00 today.', time:'09:00', unread:true, action:'updates' },
-    { id:3, type:'blue', icon:'📥', title:'Winston Arriving Today', desc:'Pickup scheduled 16:00 from Yeroskipou. K09 prepared and ready.', time:'08:30', unread:true, action:'bookings' },
-    { id:4, type:'green', icon:'✅', title:'Morning Walks Complete', desc:'All 3 morning walk sessions logged. Milo, Teddy, Bella, Archie — all completed.', time:'09:30', unread:false, action:'walks' },
-    { id:5, type:'amber', icon:'📸', title:'4 Media Items Awaiting Tags', desc:'Photos from this morning\'s group play session need dog tagging before publish.', time:'09:45', unread:true, action:'updates' },
-    { id:6, type:'green', icon:'💷', title:'Payment Received', desc:'Jennifer Clarke paid invoice INV-0089 — £420 for Milo\'s boarding.', time:'08:00', unread:false, action:'billing' },
-  ],
-
-  transport: [
-    { id:'T1', dog:'Poppy', owner:'Amanda Foster', type:'Pickup', area:'Winchcombe', address:'23 High Street, Winchcombe', time:'08:30', driver:'Emma Williams', status:'complete', notes:'Dog collected on time. Happy and excited.', bookingRef:'BK009' },
-  ],
-
-  invoices: [
-    { id:'INV-0089', owner:'Jennifer Clarke',     dog:'Milo',   amount:'£420', status:'paid',   date:'17 Jun', due:'22 Jun', kennel:'K01 · Olive Grove',   service:'Boarding',  nights:6, rate:65, lineItems:[{desc:'Boarding × 6 days',qty:6,unit:65,total:390},{desc:'Daily report & photos',qty:1,unit:10,total:10},{desc:'Extra evening walk × 2',qty:2,unit:15,total:20}], paidDate:'17 Jun', payMethod:'Bank transfer', notes:'' },
-    { id:'INV-0090', owner:'Claire Hughes',       dog:'Luna',   amount:'£695', status:'paid',   date:'16 Jun', due:'25 Jun', kennel:'K04 · Carob Court',   service:'Boarding',  nights:9, rate:65, lineItems:[{desc:'Boarding × 9 days',qty:9,unit:65,total:585},{desc:'Medication administration',qty:9,unit:5,total:45},{desc:'Daily report & photos',qty:1,unit:10,total:10},{desc:'Anxiety care supplement',qty:1,unit:25,total:25},{desc:'Transport — pickup',qty:1,unit:30,total:30}], paidDate:'16 Jun', payMethod:'Card', notes:'Anxious rescue — quiet suite. Owner requested detailed daily updates.' },
-    { id:'INV-0091', owner:'Michael Brown',       dog:'Teddy',  amount:'£530', status:'pending', date:'18 Jun', due:'18 Jun', kennel:'K03 · Sunset Run',    service:'Boarding',  nights:6, rate:65, lineItems:[{desc:'Boarding × 6 days',qty:6,unit:65,total:390},{desc:'Grooming on arrival',qty:1,unit:55,total:55},{desc:'Daily report & photos',qty:1,unit:10,total:10},{desc:'Transport — pickup',qty:1,unit:30,total:30},{desc:'Extra evening walk × 3',qty:3,unit:15,total:45}], paidDate:null, payMethod:null, notes:'Overdue since 18 Jun. £200 partial payment received 19 Jun. Balance £330 outstanding.' },
-    { id:'INV-0092', owner:'Patricia Evans',      dog:'Nala',   amount:'£695', status:'unpaid', date:'20 Jun', due:'27 Jun', kennel:'K06 · Fig Garden',    service:'Boarding',  nights:7, rate:65, lineItems:[{desc:'Boarding × 7 days',qty:7,unit:65,total:455},{desc:'Calming supplement admin',qty:7,unit:5,total:35},{desc:'Daily report & photos',qty:1,unit:10,total:10},{desc:'Transport — pickup & return',qty:2,unit:30,total:60},{desc:'Extra walks × 9',qty:9,unit:15,total:135}], paidDate:null, payMethod:null, notes:'Nala requires 2+ walks daily. Extra walk charge agreed in advance.' },
-    { id:'INV-0093', owner:'James Mitchell',      dog:'Archie', amount:'£360', status:'paid',   date:'19 Jun', due:'23 Jun', kennel:'K05 · Stone Terrace', service:'Boarding',  nights:4, rate:65, lineItems:[{desc:'Boarding × 4 days',qty:4,unit:65,total:260},{desc:'Daily report & photos',qty:1,unit:10,total:10},{desc:'Transport — return',qty:1,unit:30,total:30},{desc:'Extra walks × 4',qty:4,unit:15,total:60}], paidDate:'20 Jun', payMethod:'Bank transfer', notes:'Regular client — long stay discount applied next visit.' },
-    { id:'INV-0094', owner:'Robert Davidson',     dog:'Max',    amount:'£280', status:'paid',   date:'18 Jun', due:'21 Jun', kennel:'K08 · Hillview Lodge', service:'Boarding', nights:3, rate:65, lineItems:[{desc:'Boarding × 3 days',qty:3,unit:65,total:195},{desc:'Medication (Meloxicam daily)',qty:3,unit:5,total:15},{desc:'Daily report & photos',qty:1,unit:10,total:10},{desc:'Transport — pickup & return',qty:2,unit:30,total:60}], paidDate:'18 Jun', payMethod:'Card', notes:'Medication logs emailed to owner daily.' },
-    { id:'INV-0095', owner:'Dr Stavros Kyriakou', dog:'Olive',  amount:'£235', status:'paid',   date:'19 Jun', due:'22 Jun', kennel:'K07 · Lavender Walk', service:'Boarding',  nights:3, rate:65, lineItems:[{desc:'Boarding × 3 days',qty:3,unit:65,total:195},{desc:'Daily report & photos',qty:1,unit:10,total:10},{desc:'Transport — return',qty:1,unit:30,total:30}], paidDate:'20 Jun', payMethod:'Cash', notes:'' },
-    { id:'INV-0096', owner:'Amanda Foster',       dog:'Poppy',  amount:'£360', status:'paid',   date:'Various', due:'Jun 30', kennel:'K09',             service:'Boarding',  nights:null, rate:45, lineItems:[{desc:'Boarding sessions × 8',qty:8,unit:45,total:360}], paidDate:'20 Jun', payMethod:'Direct debit', notes:'Monthly package. Regular Friday + ad-hoc visits.' },
-    { id:'INV-0097', owner:'Helen Barnes',        dog:'Coco',   amount:'£270', status:'paid',   date:'Various', due:'Jun 30', kennel:'K09',             service:'Boarding',  nights:null, rate:45, lineItems:[{desc:'Boarding sessions × 6',qty:6,unit:45,total:270}], paidDate:'20 Jun', payMethod:'Direct debit', notes:'' },
-    { id:'INV-0098', owner:'Tom Richardson',      dog:'Winston',amount:'£395', status:'pending', date:'20 Jun', due:'25 Jun', kennel:'K09 · Quiet Pines',  service:'Boarding',  nights:5, rate:65, lineItems:[{desc:'Boarding × 5 days',qty:5,unit:65,total:325},{desc:'Daily report & photos',qty:1,unit:10,total:10},{desc:'Transport — pickup & return',qty:2,unit:30,total:60}], paidDate:null, payMethod:null, notes:'Arriving today. Invoice issued on check-in.' },
-  ],
-
-  payments: [
-    { id:'PAY-001', invoiceId:'INV-0089', owner:'Jennifer Clarke',     amount:420, date:'17 Jun', method:'Bank Transfer',  ref:'BACS-JC-001', note:'' },
-    { id:'PAY-002', invoiceId:'INV-0090', owner:'Claire Hughes',       amount:695, date:'16 Jun', method:'Card',           ref:'', note:'Paid at drop-off' },
-    { id:'PAY-003', invoiceId:'INV-0093', owner:'James Mitchell',      amount:360, date:'20 Jun', method:'Bank Transfer',  ref:'BACS-JM-001', note:'' },
-    { id:'PAY-004', invoiceId:'INV-0094', owner:'Robert Davidson',     amount:280, date:'18 Jun', method:'Card',           ref:'', note:'' },
-    { id:'PAY-005', invoiceId:'INV-0095', owner:'Dr Stavros Kyriakou', amount:220, date:'20 Jun', method:'Cash',           ref:'', note:'Settled on checkout' },
-    { id:'PAY-006', invoiceId:'INV-0096', owner:'Amanda Foster',       amount:360, date:'20 Jun', method:'Direct Debit',   ref:'DD-AF-JUN', note:'Monthly DD' },
-    { id:'PAY-007', invoiceId:'INV-0097', owner:'Helen Barnes',        amount:270, date:'20 Jun', method:'Direct Debit',   ref:'DD-HB-JUN', note:'Monthly DD' },
-    { id:'PAY-008', invoiceId:'INV-0091', owner:'Michael Brown',       amount:200, date:'19 Jun', method:'Bank Transfer',  ref:'BACS-MB-PART', note:'Partial payment — £330 balance still outstanding' },
-  ],
-
-  mediaItems: [
-    { id:'m1', dog:'Milo',   type:'photo', category:'play',           emoji:'🌳', label:'Garden Play',    desc:'Playing with Teddy in morning group session', featured:true  },
-    { id:'m2', dog:'Bella',  type:'photo', category:'walk',           emoji:'🦮', label:'Morning Walk',   desc:'Olive grove circuit — loving the shade',       featured:true  },
-    { id:'m3', dog:'Max',    type:'photo', category:'rest',           emoji:'💤', label:'Rest Time',      desc:'Settling in kennel after morning exercise',    featured:false },
-    { id:'m4', dog:'Luna',   type:'photo', category:'cuddle',         emoji:'🤗', label:'Cuddle Time',    desc:'Bonding moment with Maria — great progress',   featured:true  },
-    { id:'m5', dog:'Archie', type:'video', category:'walk',           emoji:'🎬', label:'Walk Video',     desc:'Hillside trail, morning sun — golden boy!',    featured:false },
-    { id:'m6', dog:'Nala',   type:'photo', category:'play',           emoji:'🌿', label:'Play Terrace',   desc:'Solo zoomies on the terrace',                  featured:false },
-    { id:'m7', dog:'Teddy',  type:'photo', category:'special moment', emoji:'⭐', label:'Special Moment', desc:'First time playing with the agility poles',    featured:true  },
-    { id:'m8', dog:'Olive',  type:'photo', category:'feeding',        emoji:'🍽️', label:'Feeding Time',   desc:'Enjoying duck and pear kibble — clean bowl!',  featured:false },
-  ],
-
-  careLogsToday: {
-    milo: [
-      { time:'07:00', icon:'🌅', text:'Good morning. Milo alert and tail wagging. Excellent night sleep reported.' },
-      { time:'07:15', icon:'🍽️', text:'Breakfast served — 180g Royal Canin. Eaten fully within 4 minutes.' },
-      { time:'08:00', icon:'🌳', text:'Group play session — garden with Teddy and Poppy. 90 min, high energy.' },
-      { time:'09:30', icon:'💧', text:'Water refreshed. Kennel cleaned and bedding fluffed.' },
-      { time:'09:45', icon:'📸', text:'Photo taken during play — tagged for owner gallery.' },
-    ],
-    max: [
-      { time:'06:30', icon:'🌅', text:'Max calm overnight. Brief alert at 03:00 (fox sound) but settled quickly.' },
-      { time:'07:00', icon:'🍽️', text:'Breakfast — Eukanuba Large Mature, 350g. Eaten completely.' },
-      { time:'07:30', icon:'🦮', text:'Solo hillside walk with Jake. 35 min, excellent recall, comfortable gait.' },
-      { time:'10:00', icon:'⚕️', text:'Meloxicam administered — 1 tablet in food pouch. Taken without issue.', urgent:true },
-      { time:'11:00', icon:'💤', text:'Settled in kennel for midday rest. Fan on, water bowl full.' },
-    ],
-  },
-};
+const DEMO_SEED = _emptyTenantData();
 
 // ── Phase A1: tenant-scoped DATA initialisation ─────────────────────────────
 // Returns a fresh, empty tenant snapshot. Used for any production tenant
@@ -10108,57 +9899,16 @@ function saveTransportLegEdit(jobId) {
 
 // Extended monthly data for the report
 const MONTHLY_DATA = {
-  period: 'June 2025',
-  periodShort: 'Jun-2025',
-  // A3 — these defaults are placeholders. Report renderers should call
-  // _bizName() / _bizAddressLong() instead of reading these. Kept for any
-  // legacy reference paths to avoid breakage.
+  period: '',
+  periodShort: '',
   businessName: '',
   businessAddress: '',
-  vatNumber: 'GB123456789',
-  accountantEmail: 'accounts@youraccountant.co.uk',
-
-  revenue: [
-    { category: 'Boarding',           invoices: 8,  gross: 5880, vat: 588,  net: 5292 },
-    { category: 'Other Services',         invoices: 12, gross: 1820, vat: 182,  net: 1638 },
-    { category: 'Transport',          invoices: 6,  gross: 940,  vat: 94,   net: 846  },
-    { category: 'Grooming',           invoices: 4,  gross: 320,  vat: 32,   net: 288  },
-    { category: 'Medication Admin',   invoices: 3,  gross: 120,  vat: 12,   net: 108  },
-    { category: 'Training Sessions',  invoices: 2,  gross: 100,  vat: 10,   net: 90   },
-  ],
-
-  expenses: [
-    { category: 'Veterinary Supplies',  amount: 280,  notes: 'Monthly stock replenishment' },
-    { category: 'Dog Food & Treats',    amount: 420,  notes: 'Royal Canin, Hills, raw food' },
-    { category: 'Cleaning & Hygiene',   amount: 185,  notes: 'Kennels, outdoor areas' },
-    { category: 'Utilities (prorata)',  amount: 310,  notes: 'Electricity, water, AC' },
-    { category: 'Staff Wages',          amount: 2800, notes: 'Sarah, Jake, Emma, James' },
-    { category: 'Vehicle Fuel',         amount: 145,  notes: 'Transport runs × 14' },
-    { category: 'Insurance',            amount: 180,  notes: 'Monthly premium' },
-    { category: 'Software & Tools',     amount: 65,   notes: 'PetcareIQ, booking platform' },
-    { category: 'Marketing',            amount: 90,   notes: 'Social media, Google Ads' },
-    { category: 'Miscellaneous',        amount: 55,   notes: 'Office supplies, bank charges' },
-  ],
-
-  invoiceList: [
-    { ref:'INV-0089', client:'Jennifer Clarke',     service:'Boarding · Milo',    gross:420,  vat:42,  net:378,  status:'paid',   date:'17 Jun' },
-    { ref:'INV-0090', client:'Claire Hughes',       service:'Boarding · Luna',    gross:840,  vat:84,  net:756,  status:'paid',   date:'16 Jun' },
-    { ref:'INV-0091', client:'Michael Brown',       service:'Boarding · Teddy',   gross:560,  vat:56,  net:504,  status:'unpaid', date:'18 Jun' },
-    { ref:'INV-0092', client:'Patricia Evans',      service:'Boarding · Nala',    gross:700,  vat:70,  net:630,  status:'unpaid', date:'20 Jun' },
-    { ref:'INV-0093', client:'James Mitchell',      service:'Boarding · Archie',  gross:380,  vat:38,  net:342,  status:'paid',   date:'19 Jun' },
-    { ref:'INV-0094', client:'Robert Davidson',     service:'Boarding · Max',     gross:310,  vat:31,  net:279,  status:'paid',   date:'18 Jun' },
-    { ref:'INV-0095', client:'Dr Stavros Kyriakou', service:'Boarding · Olive',   gross:280,  vat:28,  net:252,  status:'paid',   date:'19 Jun' },
-    { ref:'INV-0096', client:'Amanda Foster',       service:'Boarding × 8',        gross:360,  vat:36,  net:324,  status:'paid',   date:'Various' },
-    { ref:'INV-0097', client:'Helen Barnes',        service:'Boarding × 6',        gross:270,  vat:27,  net:243,  status:'paid',   date:'Various' },
-    { ref:'INV-0098', client:'Tom Richardson',      service:'Boarding · Winston', gross:450,  vat:45,  net:405,  status:'pending',date:'20 Jun' },
-  ],
-
-  bankDetails: {
-    bank: 'Barclays Bank',
-    account: '20-00-00 12345678',
-    iban: 'GB29 BARC 2000 0012 3456 78',
-  },
-
+  vatNumber: '',
+  accountantEmail: '',
+  revenue: [],
+  expenses: [],
+  invoiceList: [],
+  bankDetails: { bank: '', account: '', iban: '' },
   notes: '',
 };
 
